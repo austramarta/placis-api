@@ -42,6 +42,36 @@ class Item
         return $statement;
     }
 
+    public function readSingleItem()
+    {
+        $query = "SELECT 
+                i.id,
+                i.title,
+                i.description,
+                i.available,
+                i.category_id,
+                c.title as category_title, 
+                i.created
+            FROM
+                " . $this->table . " i
+            LEFT JOIN
+                categories c ON i.category_id=c.id
+            WHERE 
+                i.id = ?
+            LIMIT 0, 1";
+
+        $statement = $this->conn->prepare($query);
+        $statement->bindParam(1, $this->id);
+        $statement->execute();
+
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $this->title = $row["title"];
+        $this->description = $row["description"];
+        $this->available = $row["available"];
+        $this->category_id = $row["category_id"];
+        $this->category_title = $row["category_title"];
+    }
+
     public function createItem()
     {
         $query = "INSERT INTO " .
