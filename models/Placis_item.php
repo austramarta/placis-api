@@ -141,4 +141,18 @@ class Item
 
         return false;
     }
+
+    public function deleteItem()
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $statement = $this->conn->prepare($query);
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $statement->bindParam(":id", $this->id);
+
+        if ($statement->execute()) {
+            return true;
+        }
+        printf("Error: %s.\n, $statement->error");
+        return false;
+    }
 }
